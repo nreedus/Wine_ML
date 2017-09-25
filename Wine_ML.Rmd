@@ -34,7 +34,7 @@ I see from the summary that the wine from this region has a minimum price of 6.2
 ```{r min and max price}
 summary(wine)
 ```
-I run model1 using only one independent variable. As a result the Multiple R-squared = 0.435 and the adjusted R-squared = 0.4105. From the residuals I calculate the sum of squared errors SSE = 5.734875.
+I run model1 using only one independent variable. As a result, the Multiple R-squared = 0.435 and the adjusted R-squared = 0.4105. From the residuals I calculate the sum of squared errors SSE = 5.734875.
 
 ```{r model1}
 model1 = lm(Price ~ AGST, data = wine)
@@ -43,7 +43,7 @@ model1$residuals
 SSE = sum(model1$residuals^2)
 ```
 
-In models 2-3 I added additional variables. Model4 uses AGST (average growing season temperature), HarvestRain, WinterRain, Age as the independent variables.
+In models 2-3 (not shown) I added additional variables. Model4 uses AGST (average growing season temperature), HarvestRain, WinterRain, and Age as the independent variables.
 
 ```{r model4}
 model4 = lm(Price ~ AGST + HarvestRain + WinterRain + Age, data = wine)
@@ -60,14 +60,13 @@ predictTest = predict(model4, newdata = wineTest)
 predictTest
 ```
 
-Now I must compute the sum or squared errs along with the sum of squared totals
+Now I must compute the sum of squared errors along with the sum of squared totals.
 
 ```{r SSE & SST}
 SSE = sum((wineTest$Price - predictTest)^2)
 SST = sum((wineTest$Price - mean(wine$Price))^2)
 1-SSE/SST
 ```
-
 
 ## Conclusion
 
@@ -77,9 +76,3 @@ An analysis of the test data and the predictTest concludes that model4 is the cl
 str(wineTest)
 predictTest
 ```
-str
-You can also embed plots, for example:
-
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
