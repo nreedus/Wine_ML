@@ -1,0 +1,85 @@
+---
+title: "Wine_ML"
+author: "Narcel Reedus"
+date: "September 24, 2017"
+output: html_document
+---
+
+```{r loading packages}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+```
+
+## Summary
+
+This ML project is designed to accurately predict the quality, and therefore, the price wine in the Bordeaux region of France. It is widely known that older wines typically taste better and consequently fetch a higher price. Wine buyers profit from knowing in advance which wines will taste better in the future. 
+
+I used a multi-variable linear regression in RStudio with price as my dependent variable (outcome variable) and independent variables of weather and age to make predict wine prices. I created a total of five ML models and used a test dataset from 1979 - 1980 to verify that my model was accurate. 
+
+```{r Load Data}
+wine = read.csv("wine.csv")
+```
+## Analysis
+
+One of my first steps is to become more familar with the data. My initial analysis finds that there are seven varibles and 25 observations. AGST = Average Growing Season Temperature, Age = the age of the wine, FrancePop = population of France.  
+
+```{r structure}
+str(wine)
+```
+
+I see from the summary that the wine from this region has a minimum price of 6.205 and a maximum price of 8.494. This is good to take note of for our future analysis. 
+
+```{r min and max price}
+summary(wine)
+```
+I run model1 and see that the Multiple R-squared = 0.435 and the adjusted R-squared = 0.4105 using only one independent variable. From the residuals I calculate the sum of squared errs SSE = 5.734875.
+
+```{r model1}
+model1 = lm(Price ~ AGST, data = wine)
+summary(model1)
+model1$residuals
+SSE = sum(model1$residuals^2)
+```
+
+In models 2-3 I added additional variables. Model4 uses AGST (average growing season temperature), HarvestRain, WinterRain, Age as the independent variables.
+
+```{r model4}
+model4 = lm(Price ~ AGST + HarvestRain + WinterRain + Age, data = wine)
+summary(model4)
+```
+
+## Prediction
+
+I used my test data with model4 to see if it accurately predicts the price of Bordeaux wine from 1979-1980. I begin the prediction process by loading the wine_test.csv data.
+
+```{r prediction}
+wineTest = read.csv("wine_test.csv")
+predictTest = predict(model4, newdata = wineTest)
+predictTest
+```
+
+Now I must compute the sum or squared errs along with the sum of squared totals
+
+```{r SSE & SST}
+SSE = sum((wineTest$Price - predictTest)^2)
+SST = sum((wineTest$Price - mean(wine$Price))^2)
+1-SSE/SST
+```
+
+
+## Conclusion
+
+An analysis of the test data and the predictTest concludes that model4 is the closest prediction of wine prices of 6.95 for 1979 and 6.5 for 1980.
+
+```{r view test data}
+str(wineTest)
+predictTest
+```
+str
+You can also embed plots, for example:
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
